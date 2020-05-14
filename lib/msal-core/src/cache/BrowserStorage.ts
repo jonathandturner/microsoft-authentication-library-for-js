@@ -15,7 +15,7 @@ export class BrowserStorage {// Singleton
     protected cacheLocation: CacheLocation;
 
     constructor(cacheLocation: CacheLocation) {
-        if (!window) {
+        if (typeof window === "undefined") {
             throw AuthError.createNoWindowObjectError("Browser storage class could not find window object");
         }
 
