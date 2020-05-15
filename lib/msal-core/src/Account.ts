@@ -59,16 +59,16 @@ export class Account {
     static createAccount(idToken: IdToken, clientInfo: ClientInfo): Account {
 
         // create accountIdentifier
-        const accountIdentifier: string = idToken.objectId ||  idToken.subject;
+        const accountIdentifier: string = idToken.objectId || idToken.subject;
 
         // create homeAccountIdentifier
-        const uid: string = clientInfo ? clientInfo.uid : "";
+        let uid: string = clientInfo ? clientInfo.uid : "";
         const utid: string = clientInfo ? clientInfo.utid : "";
+        if ((uid.indexOf(accountIdentifier) > -1) || uid === ""){
+            uid = accountIdentifier;
+        } 
+        const homeAccountIdentifier: string = utid ? CryptoUtils.base64Encode(uid) + "." + CryptoUtils.base64Encode(utid) : CryptoUtils.base64Encode(uid);
 
-        let homeAccountIdentifier: string;
-        if (!StringUtils.isEmpty(uid) && !StringUtils.isEmpty(utid)) {
-            homeAccountIdentifier = CryptoUtils.base64Encode(uid) + "." + CryptoUtils.base64Encode(utid);
-        }
         return new Account(accountIdentifier, homeAccountIdentifier, idToken.preferredName, idToken.name, idToken.claims, idToken.sid, idToken.issuer);
     }
 
